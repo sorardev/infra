@@ -1,0 +1,89 @@
+version: '3.8'
+
+networks:
+  ck-io:
+
+services:
+  nginx:
+    image: nginx:1.19.8
+    container_name: 'nginx'
+    restart: always
+    ports:
+      - '80:80'
+    volumes:
+      - './config/nginx/default.conf:/etc/nginx/conf.d/default.conf'
+    depends_on:
+      - nexus
+      - registry
+      - registry-ui
+      - sonar
+      - jenkins
+    networks:
+      - ck-io
+
+  nexus:
+    image: 'sonatype/nexus3'
+    container_name: 'nexus'
+    restart: always
+    ports:
+      - '1000:8081'
+    volumes:
+      - './volumes/nexus-data:/nexus-data'
+    networks:
+      - ck-io
+
+  registry:
+    image: registry:2.7
+    container_name: 'registry'
+    restart: always
+    ports:
+      - '1003:5000'
+    volumes:
+      - './volumes/docker/registry:/var/lib/registry'
+      - './config/docker-ui/config.yml:/etc/docker/registry/config.yml'
+    networks:
+      - ck-io
+
+  registry-ui:
+    image: joxit/docker-registry-ui:static
+    container_name: 'registry-ui'
+    restart: always
+    environment:
+      - REGISTRY_URL=http://registry:1004
+      - REGISTRY_TITLE='registry-ui
+    ports:
+      - '1004:80'
+    depends_on:
+      - registry
+    networks:
+      - ck-io
+
+  sonar:
+    image: 'sonarqube:latest'
+    container_name: 'sonar'
+    restart: always
+    ports:
+      - '1005:9000'
+      - '1006:9092'
+    volumes:
+      - './volumes/sonar/conf:/opt/sonarqube/conf'
+      - './volumes/sonar/data:/opt/sonarqube/data'
+      - './volumes/sonar/logs:/opt/sonarqube/logs'
+      - './volumes/sonar/extensions:/opt/sonarqube/extensions'
+    networks:
+      - ck-io
+
+  jenkins:
+    image: 'jenkins/jenkins:lts'
+    container_name: 'jenkins'
+    restart: always
+    ports:
+      - '1001:8080'
+      - '1002:50000'
+    volumes:
+      - './volumes/jenkins/jenkins-docker-certs:/certs/client'
+      - './volumes/jenkins/jenkins-data:/var/jenkins_home'
+    networks:
+      - ck-io
+
+
