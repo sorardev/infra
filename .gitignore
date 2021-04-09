@@ -381,6 +381,11 @@ $RECYCLE.BIN/
 volumes
 volumes/*
 
+# Jetbrains
 .idea/
 .idea/*
+
+# Ansible
+*.retry
+hosts
 # End of https://www.toptal.com/developers/gitignore/api/vscode,macos,linux,windows,pycharm,jetbrains,node
