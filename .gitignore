@@ -381,4 +381,6 @@ $RECYCLE.BIN/
 volumes
 volumes/*
 
+.idea/
+.idea/*
 # End of https://www.toptal.com/developers/gitignore/api/vscode,macos,linux,windows,pycharm,jetbrains,node
