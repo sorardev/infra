@@ -11,17 +11,7 @@
 
 ## Jenkins
 
-Step to install Jenkins
-
 - Unlock Jenkins with this command `docker-compose exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword`
-  ![Unlock jenkins](assets/unlock_jenkins.png)
-- Install plugins
-  ![Install plugins jenkins](assets/install_plugins.png)
-  ![Plugins installation](assets/plugins_installation.png)
-- Save first admin
-  ![First admin](assets/first_admin.png)
-- Set url  
-  ![Jenkins url](assets/jenkins_url.png)
 
 ## Sonar
 
