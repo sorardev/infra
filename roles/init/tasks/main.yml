@@ -1,0 +1,32 @@
+---
+- name: --Debian-- Update server
+  apt:
+    upgrade: dist
+    update_cache: yes
+  when: ansible_os_family == 'Debian'
+
+- name: --Debian--  Install default packages
+  apt:
+    name:
+      - vim
+      - git
+      - sshpass
+      - openssh-client
+      - openssh-server
+      - htop
+      - curl
+      - wget
+      - ca-certificates
+      - apt-transport-https
+      - software-properties-common
+      - aptitude
+      - python3-pip
+      - python3-setuptools
+    state: latest
+  when: ansible_os_family == 'Debian'
+
+- name: Configure Timezone
+  template:
+    src: 'timezone.j2'
+    dest: '/etc/timezone'
+    mode: '0666'
