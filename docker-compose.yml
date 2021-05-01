@@ -25,7 +25,7 @@ services:
       - ck-io
 
   nexus:
-    image: 'sonatype/nexus3'
+    image: sonatype/nexus3
     container_name: 'nexus'
     restart: always
     ports:
@@ -62,12 +62,18 @@ services:
       - ck-io
 
   sonar:
-    image: 'sonarqube:latest'
-    container_name: 'sonar'
+    image: sonarqube:latest
+    container_name: sonar
     restart: always
+    depends_on:
+      - sonar-postgres
     ports:
       - '1005:9000'
       - '1006:9092'
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonar-postgres:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
     volumes:
       - './volumes/sonar/conf:/opt/sonarqube/conf'
       - './volumes/sonar/data:/opt/sonarqube/data'
@@ -76,11 +82,23 @@ services:
     networks:
       - ck-io
 
+  sonar-postgres:
+    image: postgres
+    container_name: 'sonar-postgres'
+    volumes:
+      - './volumes/sonar/postgresql:/var/lib/postgresql'
+      - './volumes/sonar/postgresql_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+    networks:
+      - ck-io
+
   jenkins:
     build:
       context: ./config/jenkins
       dockerfile: ./Dockerfile
-    container_name: 'jenkins-blueocean1.1'
+    container_name: jenkins-blueocean1.1
     restart: always
     ports:
       - '1001:8080'
@@ -97,7 +115,7 @@ services:
       - jenkins-docker
     networks:
       - ck-io
-  
+
   jenkins-docker:
     image: docker:dind
     privileged: true
@@ -110,5 +128,5 @@ services:
     command: --storage-driver=overlay2
     networks:
       ck-io:
-        aliases: 
+        aliases:
           - docker
