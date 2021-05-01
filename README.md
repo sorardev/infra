@@ -23,19 +23,26 @@
 - `docker-compose stop `
 - `docker-compose down `
 
-## Ansible (Server installation)
+## Ansible (Server installation) Without Docker [In progress]
+
 - Rename `hosts.example` to `hosts`
 - Replace `0.0.0.0` with servers ip
-- Check file variables ```roles/vars.yml``` 
+- Check file variables ```roles/vars.yml```
 - Playbook is in ```roles/servers.yml```
+- ```cd ansible```
 - Run this command
-```ansible-playbook -i hosts roles/servers.yml --ssh-common-args='-o StrictHostKeyChecking=no'```
-OR
-``` sh install_server.sh```
+  ```ansible-playbook -i hosts roles/servers.yml --ssh-common-args='-o StrictHostKeyChecking=no'```
+  OR
+  ``` sh install_server.sh```
+  
+## Ansible (Server installation) With Docker [In progress]
 
-### Roles  (Ubuntu/Debian)
-- Init playbook 
-- Docker playbook
+- Install python3 in Centos Servers
+  ```yum install -y python3```
 
-### Roles  (Redhat/Centos)
--
+- Build image
+  ```docker build -f ansible.Dockerfile -t ansible:latest .```
+- Run ansible with volume container
+  ```docker run -it --rm -v "$(pwd)/ansible":/ansible -v $HOME/.ssh/:/root/.ssh/ -w /ansible ansible bash```
+- Install Init and Docker in Servers
+  ```sh install_server.sh```
