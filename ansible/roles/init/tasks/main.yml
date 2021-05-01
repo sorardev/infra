@@ -5,6 +5,13 @@
     update_cache: yes
   when: ansible_os_family == 'Debian'
 
+- name: --Centos-- Update server
+  yum:
+    name: '*'
+    state: latest
+    update_cache: yes
+  when: ansible_os_family == 'RedHat'
+
 - name: --Debian--  Install default packages
   apt:
     name:
@@ -24,6 +31,22 @@
       - python3-setuptools
     state: latest
   when: ansible_os_family == 'Debian'
+
+- name: --Centos--  Install default packages
+  dnf:
+    name:
+      - epel-release
+      - vim
+      - git
+      - curl
+      - wget
+      - ca-certificates
+      - python3-pip
+      - python3-setuptools
+      - yum-utils
+      - bash-completion
+    state: latest
+  when: ansible_os_family == 'RedHat'
 
 - name: Configure Timezone
   template:
