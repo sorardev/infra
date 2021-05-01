@@ -35,7 +35,7 @@
   OR
   ``` sh install_server.sh```
   
-## Ansible (Server installation) With Docker [In progress]
+## Ansible (Server installation) With Docker [In progress] {Centos/Ubuntu/Debian}
 
 - Install python3 in Centos Servers
   ```yum install -y python3```
@@ -44,5 +44,5 @@
   ```docker build -f ansible.Dockerfile -t ansible:latest .```
 - Run ansible with volume container
   ```docker run -it --rm -v "$(pwd)/ansible":/ansible -v $HOME/.ssh/:/root/.ssh/ -w /ansible ansible bash```
-- Install Init and Docker in Servers
+- Install roles(Init and Docker) in your Servers
   ```sh install_server.sh```
