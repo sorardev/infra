@@ -8,3 +8,4 @@ RUN pip3 install --upgrade pip; \
     pip3 install "ansible==2.9.12"
 
 RUN ansible-galaxy install geerlingguy.docker
+RUN ansible-galaxy install geerlingguy.nginx

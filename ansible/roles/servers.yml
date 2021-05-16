@@ -9,3 +9,6 @@
         name: init
     - include_role:
         name: geerlingguy.docker
+    - include_role:
+        name: geerlingguy.nginx
+
