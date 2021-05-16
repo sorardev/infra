@@ -1,0 +1,16 @@
+version: '3.8'
+
+networks:
+  ck-io:
+
+services:
+  nexus:
+    image: sonatype/nexus3:3.30.1
+    container_name: 'nexus'
+    restart: always
+    ports:
+      - '1000:8081'
+    volumes:
+      - './volumes/nexus-data:/nexus-data'
+    networks:
+      - ck-io

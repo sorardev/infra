@@ -61,3 +61,28 @@
 - Replace `0.0.0.0` with your servers ip
 - Run ansible with volume container and install playbook
   ```docker run -it --rm -v "$(pwd)/ansible":/ansible -v $HOME/.ssh/:/root/.ssh/ -w /ansible ansible sh install_server.sh```
+
+## Lunch only one service
+### Nexus
+
+- up `docker-compose -f nexus.docker-compose.yml up -d`
+- down `docker-compose -f nexus.docker-compose.yml down`
+- Open in browser [Nexus](http://localhost:1000/)
+
+### Jenkins with docker
+
+- up `docker-compose -f jenkins.docker-compose.yml up -d`
+- down `docker-compose -f jenkins.docker-compose.yml down`
+- Open in browser [Jenkins](http://localhost:1001/)
+
+### Docker Registry
+
+- up `docker-compose -f registry.docker-compose.yml up -d`
+- down `docker-compose -f registry.docker-compose.yml down`
+- Open in browser [Registry](http://localhost:1004/)
+
+### Sonar
+
+- up `docker-compose -f sonar.docker-compose.yml up -d`
+- down `docker-compose -f sonar.docker-compose.yml up -d`
+- Open in browser [Sonar](http://localhost:1005/)

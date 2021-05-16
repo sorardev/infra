@@ -1,0 +1,32 @@
+version: '3.8'
+
+networks:
+  ck-io:
+
+
+services:
+  registry:
+    image: registry:2.7.1
+    container_name: 'registry'
+    restart: always
+    ports:
+      - '1003:5000'
+    volumes:
+      - './volumes/docker/registry:/var/lib/registry'
+      - './config/docker-ui/config.yml:/etc/docker/registry/config.yml'
+    networks:
+      - ck-io
+
+  registry-ui:
+    image: joxit/docker-registry-ui:arm64v8-static
+    container_name: 'registry-ui'
+    restart: always
+    environment:
+      - REGISTRY_URL=http://registry:1004
+      - REGISTRY_TITLE='registry-ui
+    ports:
+      - '1004:80'
+    depends_on:
+      - registry
+    networks:
+      - ck-io
