@@ -9,6 +9,22 @@
 - username: admin
 - password: ` docker-compose exec nexus cat /nexus-data/admin.password`
 
+### Nexus-pypi
+
+- create nexus python-proxy with url(https://pypi.org)
+- create nexus python-hosted
+- create nexus python
+- install twine: ```pip3 install twine```
+- upload your lib: ```twine upload --repository-url=http://localhost:1000/repository/python-hosted/ name_lib.tar.gz```
+
+### Nexus-npm
+
+- create nexus npm-proxy with url(https://pypi.org)
+- create nexus npm-hosted
+- create nexus npm -```npm config set registry http://localhost:1000/repository/npm/```
+  -```npm login --registry=http://localhost:1000/repository/npm/```
+  -```npm publish {{packageName}}```
+
 ## Jenkins
 
 - Unlock Jenkins with this command `docker-compose exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword`
