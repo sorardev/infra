@@ -2,3 +2,6 @@
 0.0.0.0
 [all:vars]
 ansible_python_interpreter=/usr/bin/python3
+#ansible_become=yes
+#ansible_user=ckechad
+#ansible_sudo_pass=ckechad
