@@ -41,8 +41,12 @@
 
 ## Ansible (Server installation) [In progress]
 
+- Copy ssh key `ssh-copy-id -i ~/.ssg/id_rsa.pub user@ip-server`  don't forget to change user and ip-server and if you
+  use root user enable root login over ssh PermitRootLogin yes
+- Enable root login over ssh
+  `vim sshd_config` add `PermitRootLogin yes` `service sshd restart`
 - Rename `hosts.example` to `hosts`
-- Replace `0.0.0.0` with servers ip
+- Replace `0.0.0.0` with ip-server
 - Check file variables ```roles/vars.yml```
 - Playbook is in ```roles/servers.yml```
 - ```cd ansible```
@@ -63,6 +67,7 @@
   ```docker run -it --rm -v "$(pwd)/ansible":/ansible -v $HOME/.ssh/:/root/.ssh/ -w /ansible ansible sh install_server.sh```
 
 ## Lunch only one service
+
 ### Nexus
 
 - up `docker-compose -f nexus.docker-compose.yml up -d`
