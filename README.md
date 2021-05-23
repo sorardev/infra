@@ -39,7 +39,7 @@
 - `docker-compose stop `
 - `docker-compose down `
 
-## Ansible (Server installation) Without Docker [In progress]
+## Ansible (Server installation) [In progress]
 
 - Rename `hosts.example` to `hosts`
 - Replace `0.0.0.0` with servers ip
