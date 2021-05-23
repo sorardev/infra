@@ -91,3 +91,7 @@
 - up `docker-compose -f sonar.docker-compose.yml up -d`
 - down `docker-compose -f sonar.docker-compose.yml up -d`
 - Open in browser [Sonar](http://localhost:1005/)
+
+## Images Docker Hub
+- build image `docker build -f images/node.Dockerfile . -t ckechad/node:12-stretch`
+- push image `docker push ckechad/node:12-stretch`
