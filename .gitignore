@@ -388,4 +388,7 @@ volumes/*
 # Ansible
 *.retry
 ansible/hosts
+
+# atlassian
+.lisences.atlassian
 # End of https://www.toptal.com/developers/gitignore/api/vscode,macos,linux,windows,pycharm,jetbrains,node
