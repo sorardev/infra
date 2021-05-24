@@ -1,0 +1,31 @@
+version: '3.8'
+
+networks:
+  ck-io:
+
+services:
+  jira:
+    image: atlassian/jira-software:latest
+    container_name: 'jira'
+    restart: always
+    ports:
+      - '8080:8080'
+    depends_on:
+      - jira-postgres
+    volumes:
+      - './volumes/atlassian/jira:/var/atlassian/application-data/jira'
+    networks:
+      - ck-io
+
+  jira-postgres:
+    image: postgres:9.6.21-alpine
+    container_name: 'jira-postgres'
+    volumes:
+      - './volumes/atlassian/jira/postgresql:/var/lib/postgresql'
+      - './volumes/atlassian/jira/postgresql_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_DB: jira
+      POSTGRES_USER: jira
+      POSTGRES_PASSWORD: jira
+    networks:
+      - ck-io

@@ -89,8 +89,20 @@
 ### Sonar
 
 - up `docker-compose -f sonar.docker-compose.yml up -d`
-- down `docker-compose -f sonar.docker-compose.yml up -d`
+- down `docker-compose -f sonar.docker-compose.yml down`
 - Open in browser [Sonar](http://localhost:1005/)
+
+### Confluence
+
+- up `docker-compose -f confluence.docker-compose.yml up -d`
+- down `docker-compose -f confluence.docker-compose.yml down`
+- Open in browser [Confluence](http://localhost:8090/)
+
+### Jira
+
+- up `docker-compose -f jira.docker-compose.yml up -d`
+- down `docker-compose -f jira.docker-compose.yml down`
+- Open in browser [Jira](http://localhost:8080/)
 
 ## Images Docker Hub
 - build image `docker build -f images/node.Dockerfile . -t ckechad/node:12-stretch`

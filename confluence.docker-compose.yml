@@ -1,0 +1,32 @@
+version: '3.8'
+
+networks:
+  ck-io:
+
+services:
+  confluence:
+    image: atlassian/confluence:latest
+    container_name: 'confluence'
+    restart: always
+    ports:
+      - '8090:8090'
+      - '8091:8091'
+    depends_on:
+      - confluence-postgres
+    volumes:
+      - './volumes/atlassian/confluence:/var/atlassian/application-data/confluence'
+    networks:
+      - ck-io
+
+  confluence-postgres:
+    image: postgres:9.6.21-alpine
+    container_name: 'confluence-postgres'
+    volumes:
+      - './volumes/atlassian/confluence/postgresql:/var/lib/postgresql'
+      - './volumes/atlassian/confluence/postgresql_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_DB: confluence
+      POSTGRES_USER: confluence
+      POSTGRES_PASSWORD: confluence
+    networks:
+      - ck-io
