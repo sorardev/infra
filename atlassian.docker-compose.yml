@@ -1,0 +1,57 @@
+version: '3.8'
+
+networks:
+  ck-io:
+
+services:
+  confluence:
+    image: atlassian/confluence:latest
+    container_name: 'confluence'
+    restart: always
+    ports:
+      - '8090:8090'
+      - '8091:8091'
+    depends_on:
+      - confluence-postgres
+    volumes:
+      - './volumes/atlassian/confluence:/var/atlassian/application-data/confluence'
+    networks:
+      - ck-io
+
+  confluence-postgres:
+    image: postgres:9.6.21-alpine
+    container_name: 'confluence-postgres'
+    volumes:
+      - './volumes/atlassian/confluence/postgresql:/var/lib/postgresql'
+      - './volumes/atlassian/confluence/postgresql_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_DB: confluence
+      POSTGRES_USER: confluence
+      POSTGRES_PASSWORD: confluence
+    networks:
+      - ck-io
+  jira:
+    image: atlassian/jira-software:latest
+    container_name: 'jira'
+    restart: always
+    ports:
+      - '8080:8080'
+    depends_on:
+      - jira-postgres
+    volumes:
+      - './volumes/atlassian/jira:/var/atlassian/application-data/jira'
+    networks:
+      - ck-io
+
+  jira-postgres:
+    image: postgres:9.6.21-alpine
+    container_name: 'jira-postgres'
+    volumes:
+      - './volumes/atlassian/jira/postgresql:/var/lib/postgresql'
+      - './volumes/atlassian/jira/postgresql_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_DB: jira
+      POSTGRES_USER: jira
+      POSTGRES_PASSWORD: jira
+    networks:
+      - ck-io
