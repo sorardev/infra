@@ -1,4 +1,4 @@
-FROM node:12-stretch
+FROM node:14-stretch-slim
 
 RUN apt-get update
 RUN apt install -y libgtk2.0-0 \

@@ -105,5 +105,5 @@
 - Open in browser [Jira](http://localhost:8080/)
 
 ## Images Docker Hub
-- build image `docker build -f images/node.Dockerfile . -t ckechad/node:12-stretch`
-- push image `docker push ckechad/node:12-stretch`
+- build image `docker build -f images/node.Dockerfile . -t ckechad/node:lts-stretch-slim`
+- push image `docker push ckechad/node:lts-stretch-slim`
