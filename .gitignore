@@ -396,5 +396,6 @@ ansible/hosts
 traefik/traefik.yml
 traefik/attlassian.traefik.yml
 traefik/jenkins.traefik.yml
+traefik/sonar-nexus.traefik.yml
 
 # End of https://www.toptal.com/developers/gitignore/api/vscode,macos,linux,windows,pycharm,jetbrains,node
