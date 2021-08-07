@@ -1,0 +1,147 @@
+version: '3.8'
+
+networks:
+  ck-io:
+
+volumes:
+  production_traefik: { }
+
+services:
+  confluence:
+    image: atlassian/confluence:latest
+    container_name: 'confluence'
+    restart: always
+    depends_on:
+      - confluence-postgres
+    volumes:
+      - './volumes/atlassian/confluence:/var/atlassian/application-data/confluence'
+    networks:
+      - ck-io
+  confluence-postgres:
+    image: postgres:9.6.21-alpine
+    container_name: 'confluence-postgres'
+    volumes:
+      - './volumes/atlassian/confluence/postgresql:/var/lib/postgresql'
+      - './volumes/atlassian/confluence/postgresql_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_DB: confluence
+      POSTGRES_USER: confluence
+      POSTGRES_PASSWORD: confluence
+    networks:
+      - ck-io
+
+  nexus:
+    image: sonatype/nexus3:3.30.1
+    container_name: 'nexus'
+    restart: always
+    volumes:
+      - './volumes/nexus-data:/nexus-data'
+    networks:
+      - ck-io
+
+  sonar:
+    image: sonarqube:7.9.6-community
+    container_name: sonar
+    restart: always
+    depends_on:
+      - sonar-postgres
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonar-postgres:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
+    volumes:
+      - './volumes/sonar/conf:/opt/sonarqube/conf'
+      - './volumes/sonar/data:/opt/sonarqube/data'
+      - './volumes/sonar/logs:/opt/sonarqube/logs'
+      - './volumes/sonar/extensions:/opt/sonarqube/extensions'
+    networks:
+      - ck-io
+  sonar-postgres:
+    image: postgres:9.6.21-alpine
+    container_name: 'sonar-postgres'
+    volumes:
+      - './volumes/sonar/postgresql:/var/lib/postgresql'
+      - './volumes/sonar/postgresql_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+    networks:
+      - ck-io
+
+
+  jenkins:
+    build:
+      context: ./config/jenkins
+      dockerfile: ./Dockerfile
+    container_name: jenkins-blueocean1.1
+    restart: always
+    environment:
+      - DOCKER_HOST=tcp://docker:2376
+      - DOCKER_CERT_PATH=/certs/client
+      - DOCKER_TLS_VERIFY=1
+    volumes:
+      - jenkins-docker-certs:/certs/client:ro
+      - './volumes/jenkins/jenkins-data:/var/jenkins_home'
+      - './volumes/jenkins/home:/home'
+    depends_on:
+      - jenkins-docker
+    networks:
+      - ck-io
+  jenkins-docker:
+    image: docker:dind
+    privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      - jenkins-docker-certs:/certs/client
+      - './volumes/jenkins/jenkins-data:/var/jenkins_home'
+    restart: always
+    command: --storage-driver=overlay2
+    networks:
+      ck-io:
+        aliases:
+          - docker
+
+  jira:
+    image: atlassian/jira-software:latest
+    container_name: 'jira'
+    restart: always
+    depends_on:
+      - jira-postgres
+    volumes:
+      - './volumes/atlassian/jira:/var/atlassian/application-data/jira'
+    networks:
+      - ck-io
+  jira-postgres:
+    image: postgres:9.6.21-alpine
+    container_name: 'jira-postgres'
+    volumes:
+      - './volumes/atlassian/jira/postgresql:/var/lib/postgresql'
+      - './volumes/atlassian/jira/postgresql_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_DB: jira
+      POSTGRES_USER: jira
+      POSTGRES_PASSWORD: jira
+    networks:
+      - ck-io
+
+  traefik:
+    build:
+      context: .
+      dockerfile: ./traefik.Dockerfile
+    image: ckechad_production_traefik
+    depends_on:
+      - confluence
+      - nexus
+      - sonar
+      - jenkins
+      - jira
+
+    volumes:
+      - './volumes/traefik/:/etc/traefik/acme:z'
+      - './traefik/traefik.yml:/etc/traefik/traefik.yml'
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+    networks:
+      - ck-io
