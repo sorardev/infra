@@ -3,6 +3,9 @@ version: '3.8'
 networks:
   ck-io:
 
+volumes:
+  production_traefik: {}
+
 services:
   confluence:
     image: atlassian/confluence:latest
