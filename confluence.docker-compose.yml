@@ -30,3 +30,16 @@ services:
       POSTGRES_PASSWORD: confluence
     networks:
       - ck-io
+
+  traefik:
+    build:
+      context: .
+      dockerfile: ./traefik/Dockerfile
+    image: ckechad_production_traefik
+    depends_on:
+      - confluence
+    volumes:
+      - production_traefik:/etc/traefik/acme:z
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
