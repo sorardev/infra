@@ -41,8 +41,10 @@ services:
     image: ckechad_production_traefik
     depends_on:
       - confluence
+      - confluence-postgres
     volumes:
-      - production_traefik:/etc/traefik/acme:z
+      - './volumes/traefik/:/etc/traefik/acme:z'
+      - './traefik/traefik.yml:/etc/traefik/traefik.yml'
     ports:
       - "0.0.0.0:80:80"
       - "0.0.0.0:443:443"
