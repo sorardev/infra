@@ -394,5 +394,6 @@ ansible/hosts
 
 # traefik files config
 traefik/traefik.yml
+traefik/attlassian.traefik.yml
 
 # End of https://www.toptal.com/developers/gitignore/api/vscode,macos,linux,windows,pycharm,jetbrains,node
