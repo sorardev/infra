@@ -5,6 +5,7 @@ networks:
 
 volumes:
   production_traefik: { }
+  jenkins-docker-certs:
 
 services:
   confluence:
