@@ -37,7 +37,7 @@ services:
   traefik:
     build:
       context: .
-      dockerfile: ./traefik/Dockerfile
+      dockerfile: ./traefik.Dockerfile
     image: ckechad_production_traefik
     depends_on:
       - confluence
