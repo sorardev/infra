@@ -107,3 +107,30 @@
 ## Images Docker Hub
 - build image `docker build -f images/node.Dockerfile . -t ckechad/node:lts-stretch-slim`
 - push image `docker push ckechad/node:lts-stretch-slim`
+
+## Jira / Confluence Production 
+- Install docker and docker-compose in server with ansible
+- `git clone https://github.com/ckec/infra.git`
+- `cd infra/`
+- `cp traefik/attlassian.traefik.yml.example traefik/traefik.yml`
+- change domaine name in traefik/traefik.yml with your domaine 
+- `docker-compose -f atlassian.prod.docker-compose.yml build`
+- `docker-compose -f atlassian.prod.docker-compose.yml up -d`
+
+## Jenkins Production 
+- Install docker and docker-compose in server with ansible
+- `git clone https://github.com/ckec/infra.git`
+- `cd infra/`
+- `cp traefik/jenkins.traefik.yml.example traefik/traefik.yml`
+- change domaine name in traefik/traefik.yml with your domaine 
+- `docker-compose -f jenkins.prod.docker-compose.yml build`
+- `docker-compose -f jenkins.prod.docker-compose.yml up -d`
+
+## Sonar / Nexus Production 
+- Install docker and docker-compose in server with ansible
+- `git clone https://github.com/ckec/infra.git`
+- `cd infra/`
+- `cp traefik/sonar-nexus.traefik.yml.example traefik/traefik.yml`
+- change domaine name in traefik/traefik.yml with your domaine 
+- `docker-compose -f sonar-nexus.prod.docker-compose.yml build`
+- `docker-compose -f sonar-nexus.prod.docker-compose.yml up -d`

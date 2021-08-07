@@ -1,0 +1,49 @@
+log:
+  level: INFO
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: web-secure
+
+  web-secure:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "ckechad@icloud.com"
+      storage: /etc/traefik/acme/acme.json
+      httpChallenge:
+        entryPoint: web
+
+http:
+  routers:
+    jenkins-secure-router:
+      rule: "Host(`jenkins.example.com`) || Host(`www.jenkins.example.com`)"
+      entryPoints:
+        - web-secure
+      middlewares:
+        - csrf
+      service: jenkins
+      tls:
+        certResolver: letsencrypt
+
+  middlewares:
+    csrf:
+      headers:
+        hostsProxyHeaders: [ "X-CSRFToken" ]
+
+  services:
+    jenkins:
+      loadBalancer:
+        servers:
+          - url: http://jenkins:8080
+
+providers:
+  file:
+    filename: /etc/traefik/traefik.yml
+    watch: true

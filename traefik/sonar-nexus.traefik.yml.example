@@ -1,0 +1,64 @@
+log:
+  level: INFO
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: web-secure
+
+  web-secure:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "ckechad@icloud.com"
+      storage: /etc/traefik/acme/acme.json
+      httpChallenge:
+        entryPoint: web
+
+http:
+  routers:
+    nexus-secure-router:
+      rule: "Host(`nexus.example.com`) || Host(`www.nexus.example.com`)"
+      entryPoints:
+        - web-secure
+      middlewares:
+        - csrf
+      service: nexus
+      tls:
+        certResolver: letsencrypt
+
+    sonar-secure-router:
+      rule: "Host(`sonar.example.com`) || Host(`www.sonar.example.com`)"
+      entryPoints:
+        - web-secure
+      service: sonar
+      tls:
+        certResolver: letsencrypt
+
+  middlewares:
+    csrf:
+      headers:
+        hostsProxyHeaders: [ "X-CSRFToken" ]
+
+  services:
+    nexus:
+      loadBalancer:
+        servers:
+          - url: http://nexus:8081
+
+    sonar:
+      loadBalancer:
+        servers:
+          - url: http://sonar:9000
+
+providers:
+  file:
+    filename: /etc/traefik/traefik.yml
+    watch: true
+
+

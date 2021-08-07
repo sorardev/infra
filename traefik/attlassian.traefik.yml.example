@@ -1,0 +1,62 @@
+log:
+  level: INFO
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: web-secure
+
+  web-secure:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "ckechad@icloud.com"
+      storage: /etc/traefik/acme/acme.json
+      httpChallenge:
+        entryPoint: web
+
+http:
+  routers:
+    confluence-secure-router:
+      rule: "Host(`www.confluence.example.com`) || Host(`www.confluence.example.com`)"
+      entryPoints:
+        - web-secure
+      middlewares:
+        - csrf
+      service: confluence
+      tls:
+        certResolver: letsencrypt
+
+    jira-secure-router:
+      rule: "Host(`jira.example.com`) || Host(`www.jira.example.com`)"
+      entryPoints:
+        - web-secure
+      service: jira
+      tls:
+        certResolver: letsencrypt
+
+  middlewares:
+    csrf:
+      headers:
+        hostsProxyHeaders: [ "X-CSRFToken" ]
+
+  services:
+    confluence:
+      loadBalancer:
+        servers:
+          - url: http://confluence:8090
+
+    jira:
+      loadBalancer:
+        servers:
+          - url: http://jira:8080
+
+providers:
+  file:
+    filename: /etc/traefik/traefik.yml
+    watch: true
