@@ -105,8 +105,12 @@
 - Open in browser [Jira](http://localhost:8080/)
 
 ## Images Docker Hub
+### Node
 - build image `docker build -f images/node.Dockerfile . -t ckechad/node:lts-stretch-slim`
 - push image `docker push ckechad/node:lts-stretch-slim`
+### Python
+- build image `docker build -f images/python.Dockerfile . -t ckechad/python:3.9.4-slim`
+- push image `docker push ckechad/python:3.9.4-slim`
 
 ## Jira / Confluence Production 
 - Install docker and docker-compose in server with ansible
