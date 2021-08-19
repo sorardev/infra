@@ -1,0 +1,58 @@
+version: '3.8'
+
+networks:
+  ck-io:
+
+services:
+  nexus:
+    image: sonatype/nexus3:3.30.1
+    container_name: 'nexus'
+    restart: always
+    volumes:
+      - './volumes/nexus-data:/nexus-data'
+    networks:
+      - ck-io
+
+  confluence:
+    image: atlassian/confluence:latest
+    container_name: 'confluence'
+    restart: always
+    ports:
+      - '8090:8090'
+      - '8091:8091'
+    depends_on:
+      - confluence-postgres
+    volumes:
+      - './volumes/atlassian/confluence:/var/atlassian/application-data/confluence'
+    networks:
+      - ck-io
+
+  confluence-postgres:
+    image: postgres:9.6.21-alpine
+    container_name: 'confluence-postgres'
+    volumes:
+      - './volumes/atlassian/confluence/postgresql:/var/lib/postgresql'
+      - './volumes/atlassian/confluence/postgresql_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_DB: confluence
+      POSTGRES_USER: confluence
+      POSTGRES_PASSWORD: confluence
+    networks:
+      - ck-io
+
+  traefik:
+    build:
+      context: .
+      dockerfile: ./traefik.Dockerfile
+    image: ckechad_production_traefik
+    depends_on:
+      - nexus
+      - confluence
+    volumes:
+      - './volumes/traefik/:/etc/traefik/acme:z'
+      - './traefik/traefik.yml:/etc/traefik/traefik.yml'
+    ports:
+      - "0.0.0.0:80:80"
+      - "0.0.0.0:443:443"
+    networks:
+      - ck-io
