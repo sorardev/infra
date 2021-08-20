@@ -8,28 +8,6 @@ volumes:
   jenkins-docker-certs:
 
 services:
-  confluence:
-    image: atlassian/confluence:latest
-    container_name: 'confluence'
-    restart: always
-    depends_on:
-      - confluence-postgres
-    volumes:
-      - './volumes/atlassian/confluence:/var/atlassian/application-data/confluence'
-    networks:
-      - ck-io
-  confluence-postgres:
-    image: postgres:9.6.21-alpine
-    container_name: 'confluence-postgres'
-    volumes:
-      - './volumes/atlassian/confluence/postgresql:/var/lib/postgresql'
-      - './volumes/atlassian/confluence/postgresql_data:/var/lib/postgresql/data'
-    environment:
-      POSTGRES_DB: confluence
-      POSTGRES_USER: confluence
-      POSTGRES_PASSWORD: confluence
-    networks:
-      - ck-io
 
   nexus:
     image: sonatype/nexus3:3.30.1
@@ -39,7 +17,6 @@ services:
       - './volumes/nexus-data:/nexus-data'
     networks:
       - ck-io
-
   sonar:
     image: sonarqube:7.9.6-community
     container_name: sonar
@@ -68,8 +45,6 @@ services:
       POSTGRES_PASSWORD: sonar
     networks:
       - ck-io
-
-
   jenkins:
     build:
       context: ./config/jenkins
@@ -102,41 +77,15 @@ services:
       ck-io:
         aliases:
           - docker
-
-  jira:
-    image: atlassian/jira-software:latest
-    container_name: 'jira'
-    restart: always
-    depends_on:
-      - jira-postgres
-    volumes:
-      - './volumes/atlassian/jira:/var/atlassian/application-data/jira'
-    networks:
-      - ck-io
-  jira-postgres:
-    image: postgres:9.6.21-alpine
-    container_name: 'jira-postgres'
-    volumes:
-      - './volumes/atlassian/jira/postgresql:/var/lib/postgresql'
-      - './volumes/atlassian/jira/postgresql_data:/var/lib/postgresql/data'
-    environment:
-      POSTGRES_DB: jira
-      POSTGRES_USER: jira
-      POSTGRES_PASSWORD: jira
-    networks:
-      - ck-io
-
   traefik:
     build:
       context: .
       dockerfile: ./traefik.Dockerfile
     image: ckechad_production_traefik
     depends_on:
-      - confluence
       - nexus
       - sonar
       - jenkins
-      - jira
 
     volumes:
       - './volumes/traefik/:/etc/traefik/acme:z'
