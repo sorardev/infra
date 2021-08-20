@@ -1,5 +1,9 @@
 version: '3.8'
 
+
+volumes:
+  jenkins-docker-certs:
+
 networks:
   ck-io:
 
