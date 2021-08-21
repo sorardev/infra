@@ -6,6 +6,7 @@ networks:
 volumes:
   production_traefik: { }
   jenkins-docker-certs:
+  jenkins-data:
 
 services:
 
