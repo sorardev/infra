@@ -1,46 +1,34 @@
-version: '3.1'
-
-networks:
-  docker:
-
-volumes:
-  jenkins-data:
-  jenkins-docker-certs:
-
+version: '3.7'
 services:
+  dind:
+    image: docker:dind
+    user: root
+    privileged: true
+    container_name: dind
+    expose:
+      - 2375
+    networks:
+      - jenkins_dind
+    environment:
+      DOCKER_TLS_CERTDIR: ""
 
   jenkins:
-    image: jenkinsci/blueocean
-    restart: always
-    networks:
-      - docker
+    image: jenkins/jenkins:lts
+    user: root
+    container_name: jenkins
+    depends_on:
+      - dind
     ports:
       - 8080:8080
       - 50000:50000
-    tty: true
     volumes:
-      - jenkins-data:/var/jenkins_home
-      - jenkins-docker-certs:/certs/client:ro
-      - $HOME:/home
+      - ./jenkins:/var/jenkins_home
+      - /usr/bin/docker:/usr/bin/docker
     environment:
-      - DOCKER_HOST=tcp://docker:2376
-      - DOCKER_CERT_PATH=/certs/client
-      - DOCKER_TLS_VERIFY=1
-
-  dind:
-    image: docker:dind
-    privileged: true
-    restart: always
+      DOCKER_HOST: "tcp://dind:2375"
     networks:
-      docker:
-        aliases:
-          - docker
-    ports:
-      - 2376:2376
-    tty: true
-    volumes:
-      - jenkins-data:/var/jenkins_home
-      - jenkins-docker-certs:/certs/client
-      - $HOME:/home
-    environment:
-      - DOCKER_TLS_CERTDIR=/certs
+      - jenkins_dind
+
+networks:
+  jenkins_dind:
+    driver: bridge
