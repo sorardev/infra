@@ -55,28 +55,51 @@ services:
       - DOCKER_HOST=tcp://docker:2376
       - DOCKER_CERT_PATH=/certs/client
       - DOCKER_TLS_VERIFY=1
+    ports:
+      - 8080:8080
+      - 50000:50000
+    tty: true
     volumes:
+      - jenkins-data:/var/jenkins_home
       - jenkins-docker-certs:/certs/client:ro
-      - './volumes/jenkins/jenkins-data:/var/jenkins_home'
-      - './volumes/jenkins/home:/home'
+      - $HOME:/home
     depends_on:
-      - jenkins-docker
+      - dind
     networks:
       - ck-io
-  jenkins-docker:
+
+  dind:
     image: docker:dind
     privileged: true
-    environment:
-      - DOCKER_TLS_CERTDIR=/certs
-    volumes:
-      - jenkins-docker-certs:/certs/client
-      - './volumes/jenkins/jenkins-data:/var/jenkins_home'
     restart: always
-    command: --storage-driver=overlay2
     networks:
       ck-io:
         aliases:
           - docker
+    ports:
+      - 2376:2376
+    tty: true
+    volumes:
+      - jenkins-data:/var/jenkins_home
+      - jenkins-docker-certs:/certs/client
+      - $HOME:/home
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+
+#  jenkins-docker:
+#    image: docker:dind
+#    privileged: true
+#    environment:
+#      - DOCKER_TLS_CERTDIR=/certs
+#    volumes:
+#      - jenkins-docker-certs:/certs/client
+#      - './volumes/jenkins/jenkins-data:/var/jenkins_home'
+#    restart: always
+#    command: --storage-driver=overlay2
+#    networks:
+#      ck-io:
+#        aliases:
+#          - docker
   traefik:
     build:
       context: .
