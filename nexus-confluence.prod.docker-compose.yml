@@ -1,23 +1,13 @@
 version: '3.8'
 
+
+volumes:
+  jenkins-docker-certs:
+
 networks:
   ck-io:
 
-volumes:
-  production_traefik: { }
-  jenkins-docker-certs:
-  jenkins-data:
-
 services:
-
-  nexus:
-    image: sonatype/nexus3:3.30.1
-    container_name: 'nexus'
-    restart: always
-    volumes:
-      - './volumes/nexus-data:/nexus-data'
-    networks:
-      - ck-io
   sonar:
     image: sonarqube:7.9.6-community
     container_name: sonar
@@ -35,6 +25,7 @@ services:
       - './volumes/sonar/extensions:/opt/sonarqube/extensions'
     networks:
       - ck-io
+
   sonar-postgres:
     image: postgres:9.6.21-alpine
     container_name: 'sonar-postgres'
@@ -46,6 +37,43 @@ services:
       POSTGRES_PASSWORD: sonar
     networks:
       - ck-io
+
+  nexus:
+    image: sonatype/nexus3:3.30.1
+    container_name: 'nexus'
+    restart: always
+    volumes:
+      - './volumes/nexus-data:/nexus-data'
+    networks:
+      - ck-io
+
+  confluence:
+    image: atlassian/confluence:latest
+    container_name: 'confluence'
+    restart: always
+    ports:
+      - '8090:8090'
+      - '8091:8091'
+    depends_on:
+      - confluence-postgres
+    volumes:
+      - './volumes/atlassian/confluence:/var/atlassian/application-data/confluence'
+    networks:
+      - ck-io
+
+  confluence-postgres:
+    image: postgres:9.6.21-alpine
+    container_name: 'confluence-postgres'
+    volumes:
+      - './volumes/atlassian/confluence/postgresql:/var/lib/postgresql'
+      - './volumes/atlassian/confluence/postgresql_data:/var/lib/postgresql/data'
+    environment:
+      POSTGRES_DB: confluence
+      POSTGRES_USER: confluence
+      POSTGRES_PASSWORD: confluence
+    networks:
+      - ck-io
+
   jenkins:
     build:
       context: ./config/jenkins
@@ -56,51 +84,30 @@ services:
       - DOCKER_HOST=tcp://docker:2376
       - DOCKER_CERT_PATH=/certs/client
       - DOCKER_TLS_VERIFY=1
-    ports:
-      - 8080:8080
-      - 50000:50000
-    tty: true
     volumes:
-      - jenkins-data:/var/jenkins_home
       - jenkins-docker-certs:/certs/client:ro
-      - $HOME:/home
+      - './volumes/jenkins/jenkins-data:/var/jenkins_home'
+      - './volumes/jenkins/home:/home'
     depends_on:
-      - dind
+      - jenkins-docker
     networks:
       - ck-io
 
-  dind:
+  jenkins-docker:
     image: docker:dind
     privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+    volumes:
+      - jenkins-docker-certs:/certs/client
+      - './volumes/jenkins/jenkins-data:/var/jenkins_home'
     restart: always
+    command: --storage-driver=overlay2
     networks:
       ck-io:
         aliases:
           - docker
-    ports:
-      - 2376:2376
-    tty: true
-    volumes:
-      - jenkins-data:/var/jenkins_home
-      - jenkins-docker-certs:/certs/client
-      - $HOME:/home
-    environment:
-      - DOCKER_TLS_CERTDIR=/certs
 
-#  jenkins-docker:
-#    image: docker:dind
-#    privileged: true
-#    environment:
-#      - DOCKER_TLS_CERTDIR=/certs
-#    volumes:
-#      - jenkins-docker-certs:/certs/client
-#      - './volumes/jenkins/jenkins-data:/var/jenkins_home'
-#    restart: always
-#    command: --storage-driver=overlay2
-#    networks:
-#      ck-io:
-#        aliases:
-#          - docker
   traefik:
     build:
       context: .
@@ -108,9 +115,9 @@ services:
     image: ckechad_production_traefik
     depends_on:
       - nexus
+      - confluence
       - sonar
       - jenkins
-
     volumes:
       - './volumes/traefik/:/etc/traefik/acme:z'
       - './traefik/traefik.yml:/etc/traefik/traefik.yml'
