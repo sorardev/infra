@@ -64,7 +64,7 @@
 - Rename `hosts.example` to `hosts`
 - Replace `0.0.0.0` with your servers ip
 - Run ansible with volume container and install playbook
-  ```docker run -it --rm -v "$(pwd)/ansible":/ansible -v $HOME/.ssh/:/root/.ssh/ -w /ansible ansible sh install_server.sh```
+  ```docker run -it --rm -v "$(pwd)/ansible":/ansible -v $HOME/.ssh/:/root/.ssh/ -w /ansible ckechad/ansible sh install_server.sh```
 
 ## Lunch only one service
 
