@@ -4,14 +4,13 @@ networks:
   ck-io:
 
 volumes:
-  production_traefik: { }
+  production_traefik: {}
   jenkins-docker-certs:
   jenkins-data:
 
 services:
-
   nexus:
-    image: sonatype/nexus3:3.30.1
+    image: sonatype/nexus3:3.35.0
     container_name: 'nexus'
     restart: always
     volumes:
@@ -19,7 +18,7 @@ services:
     networks:
       - ck-io
   sonar:
-    image: sonarqube:7.9.6-community
+    image: sonarqube:8.9.2-community
     container_name: sonar
     restart: always
     depends_on:
@@ -87,20 +86,6 @@ services:
     environment:
       - DOCKER_TLS_CERTDIR=/certs
 
-#  jenkins-docker:
-#    image: docker:dind
-#    privileged: true
-#    environment:
-#      - DOCKER_TLS_CERTDIR=/certs
-#    volumes:
-#      - jenkins-docker-certs:/certs/client
-#      - './volumes/jenkins/jenkins-data:/var/jenkins_home'
-#    restart: always
-#    command: --storage-driver=overlay2
-#    networks:
-#      ck-io:
-#        aliases:
-#          - docker
   traefik:
     build:
       context: .
@@ -115,7 +100,7 @@ services:
       - './volumes/traefik/:/etc/traefik/acme:z'
       - './traefik/traefik.yml:/etc/traefik/traefik.yml'
     ports:
-      - "0.0.0.0:80:80"
-      - "0.0.0.0:443:443"
+      - '0.0.0.0:80:80'
+      - '0.0.0.0:443:443'
     networks:
       - ck-io

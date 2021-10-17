@@ -1,4 +1,4 @@
-FROM jenkins/jenkins:2.289.3-lts-jdk11
+FROM jenkins/jenkins:2.303.2-jdk11
 #USER root
 #RUN apt-get update && \
 #apt-get -y install apt-transport-https \
@@ -19,4 +19,5 @@ FROM jenkins/jenkins:2.289.3-lts-jdk11
 #  ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 
 USER jenkins
-RUN jenkins-plugin-cli --plugins "blueocean:1.24.7 docker-workflow:1.26"
+RUN jenkins-plugin-cli --plugins "blueocean:1.25.0 docker-workflow:1.26"
+
