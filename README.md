@@ -27,7 +27,7 @@
 
 ## Jenkins
 
-- Unlock Jenkins with this command `docker-compose exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword`
+- Admin password: `docker-compose exec jenkins cat /var/jenkins_home/secrets/initialAdminPassword`
 
 ## Sonar
 
@@ -39,102 +39,74 @@
 - `docker-compose stop `
 - `docker-compose down `
 
-## Ansible (Server installation) [In progress]
-
-- Copy ssh key `ssh-copy-id -i ~/.ssg/id_rsa.pub user@ip-server`  don't forget to change user and ip-server and if you
-  use root user enable root login over ssh PermitRootLogin yes
-- Enable root login over ssh
-  `vim sshd_config` add `PermitRootLogin yes` `service sshd restart`
-- Rename `hosts.example` to `hosts`
-- Replace `0.0.0.0` with ip-server
-- Check file variables ```roles/vars.yml```
-- Playbook is in ```roles/servers.yml```
-- ```cd ansible```
-- Run this command
-  ```ansible-playbook -i hosts roles/servers.yml --ssh-common-args='-o StrictHostKeyChecking=no'```
-  OR
-  ``` sh install_server.sh```
-
-## Ansible (Server installation) With Docker [In progress] {Centos/Ubuntu/Debian}
+## Ansible (Server installation)  Centos/Debian
 
 - Install python3 in Centos Servers
   ```yum install -y python3```
-- Build image
-  ```docker build -f ansible.Dockerfile -t ansible:latest .```
 - Rename `hosts.example` to `hosts`
 - Replace `0.0.0.0` with your servers ip
-- Run ansible with volume container and install playbook
+- Run ansible image docker and install playbooks
   ```docker run -it --rm -v "$(pwd)/ansible":/ansible -v $HOME/.ssh/:/root/.ssh/ -w /ansible ckechad/ansible sh install_server.sh```
 
-## Lunch only one service
-
-### Nexus
+## Nexus (local)
 
 - up `docker-compose -f nexus.docker-compose.yml up -d`
 - down `docker-compose -f nexus.docker-compose.yml down`
 - Open in browser [Nexus](http://localhost:1000/)
 
-### Jenkins with docker
+## Nexus (Prod)
+
+- `git clone https://github.com/ckec/infra.git`
+- `cd infra/`
+- `cp traefik/nexus.traefik.yml.example traefik/traefik.yml`
+- up `docker-compose -f nexus.prod.docker-compose.yml up -d`
+- down `docker-compose -f nexus.prod.docker-compose.yml down`
+
+## Jenkins (local)
 
 - up `docker-compose -f jenkins.docker-compose.yml up -d`
 - down `docker-compose -f jenkins.docker-compose.yml down`
 - Open in browser [Jenkins](http://localhost:1001/)
 
-### Docker Registry
+## Jenkins (Prod)
+
+- `git clone https://github.com/ckec/infra.git`
+- `cd infra/`
+- `cp traefik/jenkins.traefik.yml.example traefik/traefik.yml`
+- Change domain name in traefik/traefik.yml with your domain
+- up `docker-compose -f jenkins.prod.docker-compose.yml up -d`
+- down `docker-compose -f jenkins.prod.docker-compose.yml down`
+
+## Docker Registry
 
 - up `docker-compose -f registry.docker-compose.yml up -d`
 - down `docker-compose -f registry.docker-compose.yml down`
 - Open in browser [Registry](http://localhost:1004/)
 
-### Sonar
+## Sonar (local)
 
 - up `docker-compose -f sonar.docker-compose.yml up -d`
 - down `docker-compose -f sonar.docker-compose.yml down`
 - Open in browser [Sonar](http://localhost:1005/)
 
-### Confluence
+## Sonar (Prod)
 
-- up `docker-compose -f confluence.docker-compose.yml up -d`
-- down `docker-compose -f confluence.docker-compose.yml down`
-- Open in browser [Confluence](http://localhost:8090/)
-
-### Jira
-
-- up `docker-compose -f jira.docker-compose.yml up -d`
-- down `docker-compose -f jira.docker-compose.yml down`
-- Open in browser [Jira](http://localhost:8080/)
+- `git clone https://github.com/ckec/infra.git`
+- `cd infra/`
+- `cp traefik/sonar.traefik.yml.example traefik/traefik.yml`
+- Change domain name in traefik/traefik.yml with your domain
+- up `docker-compose -f sonar.prod.docker-compose.yml up -d`
+- down `docker-compose -f sonar.prod.docker-compose.yml down`
 
 ## Images Docker Hub
+
 ### Node
+
 - build image `docker build -f images/node.Dockerfile . -t ckechad/node:lts-stretch-slim`
 - push image `docker push ckechad/node:lts-stretch-slim`
+
 ### Python
+
 - build image `docker build -f images/python.Dockerfile . -t ckechad/python:3.9.4-slim`
 - push image `docker push ckechad/python:3.9.4-slim`
 
-## Jira / Confluence Production 
-- Install docker and docker-compose in server with ansible
-- `git clone https://github.com/ckec/infra.git`
-- `cd infra/`
-- `cp traefik/attlassian.traefik.yml.example traefik/traefik.yml`
-- change domaine name in traefik/traefik.yml with your domaine 
-- `docker-compose -f atlassian.prod.docker-compose.yml build`
-- `docker-compose -f atlassian.prod.docker-compose.yml up -d`
-
-## Jenkins Production 
-- Install docker and docker-compose in server with ansible
-- `git clone https://github.com/ckec/infra.git`
-- `cd infra/`
-- `cp traefik/jenkins.traefik.yml.example traefik/traefik.yml`
-- change domaine name in traefik/traefik.yml with your domaine 
-- `docker-compose -f jenkins.prod.docker-compose.yml build`
-- `docker-compose -f jenkins.prod.docker-compose.yml up -d`
-
-## Sonar / Nexus Production 
-- Install docker and docker-compose in server with ansible
-- `git clone https://github.com/ckec/infra.git`
-- `cd infra/`
-- `cp traefik/sonar-nexus.traefik.yml.example traefik/traefik.yml`
-- change domaine name in traefik/traefik.yml with your domaine 
-- `docker-compose -f sonar-nexus.prod.docker-compose.yml build`
-- `docker-compose -f sonar-nexus.prod.docker-compose.yml up -d`
