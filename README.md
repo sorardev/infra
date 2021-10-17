@@ -115,5 +115,5 @@
 - build image `docker build -f images/ansible.Dockerfile . -t ckechad/ansible`
 - push image `docker push ckechad/ansible`
 
-## Angular Apps Generator/Install
+## Apps Generator/Install
 -- TODO
