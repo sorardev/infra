@@ -110,3 +110,7 @@
 - build image `docker build -f images/python.Dockerfile . -t ckechad/python:3.9.4-slim`
 - push image `docker push ckechad/python:3.9.4-slim`
 
+### Ansible
+
+- build image `docker build -f images/ansible.Dockerfile . -t ckechad/ansible`
+- push image `docker push ckechad/ansible`
