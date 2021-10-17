@@ -23,7 +23,7 @@ certificatesResolvers:
 http:
   routers:
     confluence-secure-router:
-      rule: "Host(`www.confluence.example.com`) || Host(`www.confluence.example.com`)"
+      rule: "Host(`www.confluence.example.io`) || Host(`www.confluence.example.io`)"
       entryPoints:
         - web-secure
       middlewares:
@@ -33,7 +33,7 @@ http:
         certResolver: letsencrypt
 
     jira-secure-router:
-      rule: "Host(`jira.example.com`) || Host(`www.jira.example.com`)"
+      rule: "Host(`jira.example.io`) || Host(`www.jira.example.io`)"
       entryPoints:
         - web-secure
       service: jira

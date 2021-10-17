@@ -5,7 +5,7 @@ networks:
 
 services:
   sonar:
-    image: sonarqube:7.9.6-community
+    image: sonarqube:8.9.2-community
     container_name: sonar
     restart: always
     depends_on:

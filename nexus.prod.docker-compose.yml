@@ -5,7 +5,7 @@ networks:
 
 services:
   nexus:
-    image: sonatype/nexus3:3.34.0
+    image: sonatype/nexus3:3.35.0
     container_name: 'nexus'
     restart: always
     volumes:
@@ -24,7 +24,7 @@ services:
       - './volumes/traefik/:/etc/traefik/acme:z'
       - './traefik/traefik.yml:/etc/traefik/traefik.yml'
     ports:
-      - "0.0.0.0:80:80"
-      - "0.0.0.0:443:443"
+      - '0.0.0.0:80:80'
+      - '0.0.0.0:443:443'
     networks:
       - ck-io

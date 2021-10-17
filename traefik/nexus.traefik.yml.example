@@ -32,22 +32,6 @@ http:
       tls:
         certResolver: letsencrypt
 
-    sonar-secure-router:
-      rule: "Host(`sonar.example.io`) || Host(`www.sonar.example.io`)"
-      entryPoints:
-        - web-secure
-      service: sonar
-      tls:
-        certResolver: letsencrypt
-
-    jenkins-secure-router:
-      rule: "Host(`jenkins.example.io`) || Host(`www.sonar.example.io`)"
-      entryPoints:
-        - web-secure
-      service: jenkins
-      tls:
-        certResolver: letsencrypt
-
   middlewares:
     csrf:
       headers:
@@ -58,16 +42,6 @@ http:
       loadBalancer:
         servers:
           - url: http://nexus:8081
-
-    sonar:
-      loadBalancer:
-        servers:
-          - url: http://sonar:9000
-
-    jenkins:
-      loadBalancer:
-        servers:
-          - url: http://jenkins:8080
 
 providers:
   file:

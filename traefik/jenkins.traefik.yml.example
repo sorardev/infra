@@ -23,7 +23,7 @@ certificatesResolvers:
 http:
   routers:
     jenkins-secure-router:
-      rule: "Host(`jenkins.example.com`) || Host(`www.jenkins.example.com`)"
+      rule: "Host(`jenkins.example.io`) || Host(`www.jenkins.example.io`)"
       entryPoints:
         - web-secure
       middlewares:
