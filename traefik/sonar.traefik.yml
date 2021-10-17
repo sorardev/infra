@@ -1,0 +1,49 @@
+log:
+  level: INFO
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entryPoint:
+          to: web-secure
+
+  web-secure:
+    address: ":443"
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: "ckechad@icloud.com"
+      storage: /etc/traefik/acme/acme.json
+      httpChallenge:
+        entryPoint: web
+
+http:
+  routers:
+    sonar-secure-router:
+      rule: "Host(`sonar.example.io`) || Host(`www.sonar.example.io`)"
+      entryPoints:
+        - web-secure
+      service: sonar
+      tls:
+        certResolver: letsencrypt
+
+  middlewares:
+    csrf:
+      headers:
+        hostsProxyHeaders: [ "X-CSRFToken" ]
+
+  services:
+    sonar:
+      loadBalancer:
+        servers:
+          - url: http://sonar:9000
+
+providers:
+  file:
+    filename: /etc/traefik/traefik.yml
+    watch: true
+
+
