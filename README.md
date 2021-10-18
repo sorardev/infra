@@ -19,7 +19,7 @@
 
 ### Nexus-npm
 
-- create nexus npm-proxy with url(https://pypi.org)
+- create nexus npm-proxy with url(https://registry.npmjs.org)
 - create nexus npm-hosted
 - create nexus npm -```npm config set registry http://localhost:1000/repository/npm/```
   -```npm login --registry=http://localhost:1000/repository/npm/```
