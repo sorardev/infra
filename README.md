@@ -97,6 +97,7 @@
 - Change domain name in traefik/traefik.yml with your domain
 - up `docker-compose -f sonar.prod.docker-compose.yml up -d`
 - down `docker-compose -f sonar.prod.docker-compose.yml down`
+- if sonar not working try with `sysctl -w vm.max_map_count=262144`
 
 ## Images Docker Hub
 
@@ -116,4 +117,5 @@
 - push image `docker push ckechad/ansible`
 
 ## Apps Generator/Install
+
 -- TODO

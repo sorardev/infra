@@ -53,3 +53,9 @@
     src: 'timezone.j2'
     dest: '/etc/timezone'
     mode: '0666'
+
+- name: Clone repo infra
+  git:
+    repo: https://github.com/ckec/infra.git
+    dest: /home/infra
+    version: main
