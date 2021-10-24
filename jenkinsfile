@@ -1,0 +1,10 @@
+pipeline {
+    agent {
+        docker {
+            image 'ckechad/node:12-stretch'
+            args '--privileged -v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+    stages {
+    }
+}

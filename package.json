@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "remark-cli": "^10.0.0",
+    "remark-preset-lint-recommended": "^6.1.1"
+  }
+}
