@@ -116,6 +116,6 @@
 - build image `docker build -f images/ansible.Dockerfile . -t ckechad/ansible`
 - push image `docker push ckechad/ansible`
 
-## Apps Generator/Install
+## Apps config generation
 
 -- TODO
