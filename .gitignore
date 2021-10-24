@@ -398,4 +398,6 @@ traefik/attlassian.traefik.yml
 traefik/jenkins.traefik.yml
 traefik/sonar-nexus.traefik.yml
 
+# sonar
+.scannerwork/
 # End of https://www.toptal.com/developers/gitignore/api/vscode,macos,linux,windows,pycharm,jetbrains,node

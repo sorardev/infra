@@ -1,5 +1,18 @@
 # Infra
 
+## Technologies
+
+- [Ansible](https://www.ansible.com/)
+- [Postgres](https://www.postgresql.org/)
+- [Docker](https://www.docker.com/)
+- [Jenkins](https://www.jenkins.io/)
+- [Nexus](https://fr.sonatype.com/nexus-repository-oss)
+- [Traefik](https://doc.traefik.io/traefik/)
+- [Nginx](https://www.nginx.com/)
+- [Angular](https://angular.io/)
+- [SonarQube](https://www.sonarqube.org/)
+- [Atlassian](https://www.atlassian.com/)
+
 ## Start containers
 
 `docker-compose up -d --remove-orphans`
@@ -99,6 +112,11 @@
 - down `docker-compose -f sonar.prod.docker-compose.yml down`
 - if sonar not working try with `sysctl -w vm.max_map_count=262144`
 
+## Run many containers  (sonar with jenkins for example)
+
+- up `docker-compose -f sonar.prod.docker-compose.yml -f jenkins.prod.docker-compose.yml build --no-cache`
+- down `docker-compose -f sonar.prod.docker-compose.yml -f jenkins.prod.docker-compose.yml down`
+
 ## Images Docker Hub
 
 ### Node
@@ -117,5 +135,3 @@
 - push image `docker push ckechad/ansible`
 
 ## Apps config generation
-
--- TODO
