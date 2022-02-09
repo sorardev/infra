@@ -19,8 +19,10 @@
 
 ## Nexus
 
+`docker-compose -f nexus.docker-compose.yml up`
+
 - username: admin
-- password: ` docker-compose exec nexus cat /nexus-data/admin.password`
+- password: `docker-compose exec nexus cat /nexus-data/admin.password`
 
 ### Nexus-pypi
 

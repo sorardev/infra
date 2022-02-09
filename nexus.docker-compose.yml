@@ -9,7 +9,7 @@ services:
     container_name: 'nexus'
     restart: always
     ports:
-      - '1000:8081'
+      - '8081:8081'
     volumes:
       - './volumes/nexus-data:/nexus-data'
     networks:
