@@ -5,7 +5,7 @@ networks:
 
 services:
   nexus:
-    image: sonatype/nexus3:3.30.1
+    image: sonatype/nexus3:3.38.1
     container_name: 'nexus'
     restart: always
     volumes:
