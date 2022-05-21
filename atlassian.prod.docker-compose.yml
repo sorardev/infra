@@ -5,7 +5,7 @@ networks:
 
 services:
   confluence:
-    image: atlassian/confluence:latest
+    image: atlassian/confluence:7.14.0-m176-jdk11
     container_name: 'confluence'
     restart: always
     ports:
@@ -31,7 +31,7 @@ services:
     networks:
       - ck-io
   jira:
-    image: atlassian/jira-software:latest
+    image: atlassian/jira-software:8.15.0-ubuntu-jdk8
     container_name: 'jira'
     restart: always
     ports:
