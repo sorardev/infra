@@ -1,0 +1,45 @@
+version: '3'
+services:
+  sentry:
+    container_name: sentry
+    image: sentry
+    env_file:
+      - .env
+    ports:
+      - '9000:9000'
+    depends_on:
+      - db
+      - redis
+    tty: true
+    stdin_open: true
+  cron:
+    container_name: sentry-cron
+    image: sentry
+    command: run cron
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+  worker:
+    container_name: sentry-worker
+    image: sentry
+    command: run worker
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+  redis:
+    container_name: sentry-redis
+    image: redis
+    volumes:
+      - './volumes/sentry/redis-data:/data'
+  db:
+    container_name: sentry-postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: sentry
+      POSTGRES_PASSWORD: sentry
+    volumes:
+      - './volumes/sentry/pg-data:/var/lib/postgresql/data'
